@@ -9,6 +9,10 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='65' font-size='80' text-anchor='middle'>❤️</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23d4597a' width='180' height='180' rx='40'/><text x='90' y='120' font-size='100' fill='white' text-anchor='middle'>❤️</text></svg>">
     <title>Our Memories ❤️</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js"></script>
     <style>
         * {
             margin: 0;
@@ -745,6 +749,9 @@
         </div>
     </div>
 
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+
     <script>
         // Register service worker for PWA support
         if ('serviceWorker' in navigator) {
@@ -760,16 +767,51 @@
 
         // Storage key
         const STORAGE_KEY = 'photoAlbumData';
+        const ALBUM_ID = 'our-memories'; // Shared between both users
 
         // State
         let photos = [];
         let currentImageIndex = 0;
         let musicPlaying = false;
+        let firebaseReady = false;
 
-        // Initialize
+        // Initialize Firebase and set up real-time listeners
+        let dbRef;
+        let storageRef;
+
         document.addEventListener('DOMContentLoaded', () => {
-            loadPhotos();
-            renderGallery();
+            // Try to initialize Firebase
+            try {
+                dbRef = firebase.database().ref(`albums/${ALBUM_ID}/photos`);
+                storageRef = firebase.storage().ref(`albums/${ALBUM_ID}`);
+                
+                // Set up real-time listener for photos
+                dbRef.on('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        photos = Object.values(snapshot.val());
+                        photos.sort((a, b) => new Date(b.uploadTime) - new Date(a.uploadTime));
+                        renderGallery();
+                        firebaseReady = true;
+                        console.log('✅ Photos synced from Firebase');
+                    }
+                });
+
+                dbRef.on('child_added', () => {
+                    console.log('🔄 New photo detected - syncing...');
+                });
+
+            } catch (err) {
+                console.log('⚠️ Firebase not available, using local storage:', err);
+                firebaseReady = false;
+                loadPhotos();
+                renderGallery();
+            }
+
+            // Fallback: Load from localStorage if Firebase fails
+            if (!firebaseReady) {
+                loadPhotos();
+                renderGallery();
+            }
         });
 
         // Load photos from localStorage
@@ -792,9 +834,34 @@
         }
 
         // Save photos to localStorage
+        // Save photos to Firebase and localStorage
         function savePhotos() {
             try {
+                // Always save to localStorage as backup
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+                
+                // Save to Firebase if available
+                if (firebaseReady && typeof firebase !== 'undefined') {
+                    try {
+                        const photosData = {};
+                        photos.forEach((photo, index) => {
+                            photosData[photo.id] = {
+                                id: photo.id,
+                                type: photo.type,
+                                date: photo.date,
+                                uploadDate: photo.uploadDate,
+                                uploadTime: photo.uploadTime,
+                                note: photo.note,
+                                // Store the data URI directly (simpler approach)
+                                src: photo.src
+                            };
+                        });
+                        dbRef.set(photosData);
+                        console.log('✅ Photos saved to Firebase');
+                    } catch (fbErr) {
+                        console.log('⚠️ Could not save to Firebase:', fbErr);
+                    }
+                }
             } catch (e) {
                 console.error('Error saving photos:', e);
                 if (e.name === 'QuotaExceededError') {
