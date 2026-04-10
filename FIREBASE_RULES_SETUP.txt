@@ -1,0 +1,55 @@
+🔥 IMPORTANT: Set Up Firebase Rules
+
+Your Firebase config has been added! Now you need to set up the security rules.
+
+Follow these steps in Firebase Console:
+
+═══════════════════════════════════════════════════════════
+
+1️⃣ SET UP REALTIME DATABASE RULES
+
+Go to: https://console.firebase.google.com/project/ourlove-3d826/database/rules
+
+Replace all the code with this:
+
+{
+  "rules": {
+    "albums": {
+      ".read": true,
+      ".write": true,
+      "$albumId": {
+        ".indexOn": ["uploadTime"]
+      }
+    }
+  }
+}
+
+Then click "Publish"
+
+═══════════════════════════════════════════════════════════
+
+2️⃣ SET UP CLOUD STORAGE RULES
+
+Go to: https://console.firebase.google.com/project/ourlove-3d826/storage/rules
+
+Replace all the code with this:
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /albums/{allPaths=**} {
+      allow read, write;
+    }
+  }
+}
+
+Then click "Publish"
+
+═══════════════════════════════════════════════════════════
+
+✅ ONCE YOU'VE DONE BOTH:
+
+Your Firebase is fully configured and ready to go!
+The app will now sync photos in real-time between you and your girlfriend.
+
+═══════════════════════════════════════════════════════════

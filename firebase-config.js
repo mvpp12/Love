@@ -3,13 +3,14 @@
 
 // Replace these with your Firebase project credentials
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCkQjW1DESEmZVuGkduUcD4eaQzfs6cUU",
+    authDomain: "ourlove-3d826.firebaseapp.com",
+    databaseURL: "https://ourlove-3d826.firebaseio.com",
+    projectId: "ourlove-3d826",
+    storageBucket: "ourlove-3d826.firebasestorage.app",
+    messagingSenderId: "410428943619",
+    appId: "1:410428943619:web:766a4b0ecea089a84e8d36",
+    measurementId: "G-2XVW35T9G4"
 };
 
 // Initialize Firebase
