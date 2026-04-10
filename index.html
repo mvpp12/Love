@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#d4597a">
+    <meta name="description" content="A romantic photo album to store your precious memories">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='65' font-size='80' text-anchor='middle'>❤️</text></svg>">
+    <title>Our Memories - Barcode Entry</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffeef8 0%, #fff0f6 100%);
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .barcode-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .barcode-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+        }
+
+        .barcode {
+            display: flex;
+            gap: 3px;
+            height: 200px;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .bar {
+            width: 8px;
+            background: #000;
+            border-radius: 2px;
+            animation: barcodeScan 0.8s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) { height: 70%; animation-delay: 0s; }
+        .bar:nth-child(2) { height: 100%; animation-delay: 0.05s; }
+        .bar:nth-child(3) { height: 60%; animation-delay: 0.1s; }
+        .bar:nth-child(4) { height: 85%; animation-delay: 0.15s; }
+        .bar:nth-child(5) { height: 75%; animation-delay: 0.2s; }
+        .bar:nth-child(6) { height: 95%; animation-delay: 0.25s; }
+        .bar:nth-child(7) { height: 65%; animation-delay: 0.3s; }
+        .bar:nth-child(8) { height: 100%; animation-delay: 0.35s; }
+        .bar:nth-child(9) { height: 80%; animation-delay: 0.4s; }
+        .bar:nth-child(10) { height: 70%; animation-delay: 0.45s; }
+        .bar:nth-child(11) { height: 90%; animation-delay: 0.5s; }
+        .bar:nth-child(12) { height: 75%; animation-delay: 0.55s; }
+
+        @keyframes barcodeScan {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .barcode-code {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #000;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        #qrCode {
+            margin-top: 20px;
+        }
+
+        #qrCode img {
+            max-width: 200px;
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .instructions {
+            text-align: center;
+            color: #d4597a;
+            font-size: 16px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        .instructions h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #c44569;
+        }
+
+        .instructions p {
+            font-size: 14px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .heart {
+            display: inline-block;
+            animation: heartbeat 0.8s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 600px) {
+            .barcode {
+                height: 150px;
+                padding: 0 15px;
+            }
+
+            .bar {
+                width: 6px;
+            }
+
+            .barcode-container {
+                padding: 20px;
+            }
+
+            .instructions h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <h2>Welcome <span class="heart">❤️</span></h2>
+            <p>Scan the QR code or click to unlock our memories</p>
+        </div>
+
+        <div class="barcode-container" onclick="goToPassword()">
+            <div id="qrCode"></div>
+            <div class="barcode-code">100324</div>
+        </div>
+    </div>
+
+    <script>
+        // Register service worker for PWA support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(registration => {
+                console.log('Service Worker registered');
+            }).catch(err => {
+                console.log('Service Worker registration failed:', err);
+            });
+        }
+
+        // Generate QR Code
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrCodeContainer = document.getElementById('qrCode');
+            
+            // Create QR code that links to password page
+            const qrCode = new QRCode(qrCodeContainer, {
+                text: window.location.href.replace('index.html', 'password.html'),
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+
+        function goToPassword() {
+            window.location.href = 'password.html';
+        }
+    </script>
+</body>
+</html>

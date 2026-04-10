@@ -1,0 +1,62 @@
+{
+  "name": "Our Memories - Photo Album",
+  "short_name": "Our Memories",
+  "description": "A beautiful romantic photo album to store your precious memories",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffeef8",
+  "theme_color": "#d4597a",
+  "categories": ["photography", "utilities"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23ffeef8' width='540' height='720'/><text x='50%' y='50%' font-size='40' fill='%23d4597a' text-anchor='middle' dy='.3em' font-family='Arial'>Our Memories ❤️</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23d4597a' width='192' height='192' rx='45'/><text x='50%' y='50%' font-size='80' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'>❤️</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23d4597a' width='512' height='512' rx='120'/><text x='50%' y='50%' font-size='250' fill='white' text-anchor='middle' dy='.3em' font-family='Arial'>❤️</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Upload Photos",
+      "short_name": "Upload",
+      "description": "Upload new photos to your album",
+      "url": "album.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='50%' y='50%' font-size='50' text-anchor='middle' dy='.3em'>📸</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "album.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  }
+}
